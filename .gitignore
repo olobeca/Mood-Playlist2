@@ -1,0 +1,39 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+dist/
+build/
+
+# Python
+*.pyc
+*.pyo
+__pycache__/
+venv/
+env/
+*.env
+*.venv
+*.virtualenv
+.pytest_cache/
+.coverage
+*.log
+
+# TensorFlow
+*.h5
+*.pb
+*.ckpt
+*.meta
+tf_models/
+
+# macOS
+.DS_Store
+
+# IDE/Editor Files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
