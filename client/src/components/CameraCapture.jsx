@@ -7,8 +7,21 @@ function CameraCapture() {
 
   const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot(); // Base64 obrazek
-    //await axios.post('http://localhost:8000/analyze', { image: imageSrc });
-    // Wysyłanie zdjęcia do backendu
+
+    fetch('http://localhost:5001/analyze', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ image: imageSrc }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   return (
