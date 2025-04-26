@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
+const { spawn } = require('child_process');  //do odpalania skryptu python
 
 
 
@@ -42,4 +43,37 @@ app.post('/analyze', (req, res) => {
     const { image } = req.body;
     console.log('Dostałem obrazek base64:', image.substring(0, 100)); // wypisujemy tylko kawałek, żeby nie było za długie
     res.json({ message: 'Obrazek odebrany!' });
-});
+}); 
+
+app.post('/run-python', (req, res) => {
+
+    const venvPath = path.join(__dirname, '..', 'python', 'venv', 'bin', 'activate');  
+    const scriptPath = path.join(__dirname, '..', 'python', '1.py');
+
+    // Aktywacja wirtualnego środowiska i uruchomienie skryptu
+    const python = spawn('bash', ['-c', `source ${venvPath} && python ${scriptPath}`]);
+
+    let result = '';
+    let error = '';
+
+    python.stdout.on('data', (data) => {
+        result += data.toString();
+    });
+    python.stderr.on('data', (data) => {
+        error += data.toString();
+    });
+
+    python.on('close', (code) => {
+        if (code !== 0) {
+            console.error(`Skrypt zakończył się błędem: ${error}`);
+            res.status(500).json({ error: 'Wystąpił błąd podczas uruchamiania skryptu.' });
+        } else {
+            console.log(`Wynik skryptu: ${result}`);
+            res.json({ output: result.trim() });
+        }
+    });
+
+
+
+
+})
