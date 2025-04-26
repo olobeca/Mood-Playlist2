@@ -47,12 +47,12 @@ app.post('/analyze', (req, res) => {
 
 app.post('/run-python', (req, res) => {
 
+    const { image } = req.body;
     const venvPath = path.join(__dirname, '..', 'python', 'venv', 'bin', 'activate');  
     const scriptPath = path.join(__dirname, '..', 'python', '1.py');
 
     // Aktywacja wirtualnego środowiska i uruchomienie skryptu
-    const python = spawn('bash', ['-c', `source ${venvPath} && python ${scriptPath}`]);
-
+    const python = spawn('bash', ['-c', `source ${venvPath} && python ${scriptPath} '${image}'`]);
     let result = '';
     let error = '';
 
@@ -64,6 +64,7 @@ app.post('/run-python', (req, res) => {
     });
 
     python.on('close', (code) => {
+        console.log(`Proces zakończony z kodem: ${code}`);
         if (code !== 0) {
             console.error(`Skrypt zakończył się błędem: ${error}`);
             res.status(500).json({ error: 'Wystąpił błąd podczas uruchamiania skryptu.' });
