@@ -37,3 +37,7 @@ tf_models/
 
 # Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
+
+# Ignoruj certyfikaty SSL
+private_key.pem
+cert.pem
