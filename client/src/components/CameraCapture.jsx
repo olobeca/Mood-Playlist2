@@ -1,9 +1,12 @@
 import React, { useRef } from 'react';
 import Webcam from 'react-webcam';
+import { useState } from 'react';
 //import axios from 'axios';
 
 function CameraCapture() {
   const webcamRef = useRef(null);
+  const [Odpowiedz, setOdpowiedz] = useState(''); 
+  const [Emocja, setEmocja] = useState(''); 
 
   const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot(); // Base64 obrazek
@@ -34,11 +37,18 @@ function CameraCapture() {
         .then((response) => response.json())
         .then((data) => {
           console.log('Odpowiedź z serwera:', data);
+          setOdpowiedz(data); 
+          if (data.output) {
+            const emotion = JSON.parse(data.output).emotion; 
+            setEmocja(emotion); 
+          }
         })
         .catch((error) => {
           console.error('Błąd:', error);
         });
+
   };
+   
     
 
 
@@ -50,6 +60,10 @@ function CameraCapture() {
         screenshotFormat="image/jpeg"
       />
       <button onClick={capture}>Zrób zdjęcie i wyślij</button>
+      <p>Odpowiedź z serwera: </p>
+      {Odpowiedz && (
+        <p>Dominująca emocja: {Odpowiedz && JSON.parse(Odpowiedz.output).emotion}</p>
+      )}
     </div>
   );
 }
