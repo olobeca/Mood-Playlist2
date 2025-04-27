@@ -101,7 +101,22 @@ spotifyApi.clientCredentialsGrant()
   .then((data) => {
     console.log('Uzyskano token dostępu:', data.body['access_token']);
     spotifyApi.setAccessToken(data.body['access_token']);
+
+    return spotifyApi.searchPlaylists('happy');
+  })
+  .then((data) => {
+    console.log('Znalezione playlisty:', data.body);
+    const playlists = data.body.playlists.items;
+    playlists.forEach((playlist) => {
+        if (playlist) {
+            console.log(`Nazwa playlisty: ${playlist.name}`);
+            console.log(`Link do playlisty: ${playlist.external_urls.spotify}`);
+            console.log(`Liczba utworów: ${playlist.tracks.total}`);
+            console.log('--------------------------');
+        }
+    });
   })
   .catch((error) => {
-    console.error('Błąd podczas uzyskiwania tokenu dostępu:', error);
+    console.error('Błąd podczas wyszukiwania playlist:', error);
   });
+
