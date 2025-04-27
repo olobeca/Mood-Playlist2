@@ -3,8 +3,11 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const { spawn } = require('child_process');  //do odpalania skryptu python
+const fs = require('fs');
 
-
+const privateKey = fs.readFileSync('private_key.pem', 'utf8');
+const certificate = fs.readFileSync('cert.pem', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
 
 const corsOptions = {
   origin: 'http://localhost:3000',
@@ -35,8 +38,11 @@ app.use(logger);
 
 // Start serwera
 const PORT = 5001;
-app.listen(PORT, () => {
-  console.log(`Serwer działa na http://localhost:${PORT}`);
+//serwer https
+const https = require('https');
+const httpsServer = https.createServer(credentials, app);
+httpsServer.listen(PORT, () => {
+  console.log(`Serwer HTTPS działa na https://localhost:${PORT}`);
 });
 
 app.post('/analyze', (req, res) => {
@@ -48,7 +54,7 @@ app.post('/analyze', (req, res) => {
 app.post('/run-python', (req, res) => {
 
     let { image } = req.body;
-    
+
     //splitowanie obrazka zeby pasowal 
     if (image.startsWith('data:image')) {
         image = image.split(',')[1];

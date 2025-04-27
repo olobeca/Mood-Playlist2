@@ -11,7 +11,7 @@ function CameraCapture() {
   const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot(); // Base64 obrazek
 
-    fetch('http://localhost:5001/analyze', {
+    fetch('/analyze', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ function CameraCapture() {
       });
 
 
-      fetch('http://localhost:5001/run-python', {
+      fetch('/run-python', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
