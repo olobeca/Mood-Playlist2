@@ -4,10 +4,18 @@ const path = require('path');
 const cors = require('cors');
 const { spawn } = require('child_process');  //do odpalania skryptu python
 const fs = require('fs');
+const SpotifyWebApi = require('spotify-web-api-node');
+require('dotenv').config();
 
 const privateKey = fs.readFileSync('private_key.pem', 'utf8');
 const certificate = fs.readFileSync('cert.pem', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
+
+const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    redirectUri: process.env.REDIRECT_URI,
+  });
 
 const corsOptions = {
   origin: 'http://localhost:3000',
@@ -86,8 +94,14 @@ app.post('/run-python', (req, res) => {
             res.json({ output: result.trim() });
         }
     });
-
-
-
-
 })
+
+// Uzyskanie tokenu dostępu (Client Credentials Flow)
+spotifyApi.clientCredentialsGrant()
+  .then((data) => {
+    console.log('Uzyskano token dostępu:', data.body['access_token']);
+    spotifyApi.setAccessToken(data.body['access_token']);
+  })
+  .catch((error) => {
+    console.error('Błąd podczas uzyskiwania tokenu dostępu:', error);
+  });
