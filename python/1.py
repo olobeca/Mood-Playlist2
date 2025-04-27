@@ -9,7 +9,10 @@ if len(sys.argv) < 2:
     print(json.dumps({'error': 'No image provided'}))
     sys.exit(1)
 
-image_base64 = sys.argv[1]
+image_base64 = sys.argv[1] 
+
+#with open('input.txt', 'r') as file:
+ #   image_base64 = file.read()
 
 try:
     image_data = base64.b64decode(image_base64)
@@ -20,5 +23,6 @@ try:
     dominant_emotion = result[0]['dominant_emotion']
     print(json.dumps({'emotion': dominant_emotion}))
 except Exception as e:
-    print(json.dumps({'error': str(e)}))
+    #print(json.dumps({'error': str(e)}))
+    print(json.dumps({'error': f'Błąd: {str(e)}'}))
     sys.exit(1)
