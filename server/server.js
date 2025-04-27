@@ -13,7 +13,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options('/api/*', cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: '100mb' }));
 
 const logger = (req,res, next) => {
     const czas = new Date().toISOString();
@@ -47,7 +47,14 @@ app.post('/analyze', (req, res) => {
 
 app.post('/run-python', (req, res) => {
 
-    const { image } = req.body;
+    let { image } = req.body;
+    
+    //splitowanie obrazka zeby pasowal 
+    if (image.startsWith('data:image')) {
+        image = image.split(',')[1];
+    }
+    console.log('Otrzymany obrazek - debug in server:', image.substring(0, 100)); // debug
+
     const venvPath = path.join(__dirname, '..', 'python', 'venv', 'bin', 'activate');  
     const scriptPath = path.join(__dirname, '..', 'python', '1.py');
 
