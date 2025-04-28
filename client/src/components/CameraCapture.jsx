@@ -8,6 +8,9 @@ function CameraCapture() {
   const [Odpowiedz, setOdpowiedz] = useState(''); 
   const [Emocja, setEmocja] = useState(''); 
   const [Playlists, setPlaylists] = useState([]);
+  const [Race, setRace] = useState(''); 
+  const [Gender, setGender] = useState(''); 
+  const [Age, setAge] = useState('');
 
   const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot(); // Base64 obrazek
@@ -43,6 +46,12 @@ function CameraCapture() {
             try {
             const emotion = JSON.parse(data.pythonOutput).emotion; 
             setEmocja(emotion); 
+            const race = JSON.parse(data.pythonOutput).race;
+            setRace(race); 
+            const gender = JSON.parse(data.pythonOutput).gender;
+            setGender(gender); 
+            const age = JSON.parse(data.pythonOutput).age;
+            setAge(age);
             } catch (error) {
               console.error('Błąd podczas parsowania odpowiedzi:', error);
             }
@@ -72,6 +81,9 @@ function CameraCapture() {
       <button onClick={capture}>Zrób zdjęcie i wyślij</button>
       <p>Odpowiedź z serwera: </p>
       {Emocja && <p>Dominująca emocja: {Emocja}</p>}
+      {Age && <p>Wiek: {Age}</p>}
+      {Gender && <p>Pleć: {Gender}</p>}
+      {Race && <p>Rasa: {Race}</p>}
       {Playlists && Playlists.length > 0 && (
       <div>
         {Playlists.map((playlist, index) => (
