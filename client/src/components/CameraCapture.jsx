@@ -7,6 +7,7 @@ function CameraCapture() {
   const webcamRef = useRef(null);
   const [Odpowiedz, setOdpowiedz] = useState(''); 
   const [Emocja, setEmocja] = useState(''); 
+  const [Playlists, setPlaylists] = useState([]);
 
   const capture = async () => {
     const imageSrc = webcamRef.current.getScreenshot(); // Base64 obrazek
@@ -49,6 +50,7 @@ function CameraCapture() {
           if(data.playlists)
           {
             console.log('Playlisty:', data.playlists);
+            setPlaylists(data.playlists);
           }
         })
         .catch((error) => {
@@ -70,6 +72,16 @@ function CameraCapture() {
       <button onClick={capture}>Zrób zdjęcie i wyślij</button>
       <p>Odpowiedź z serwera: </p>
       {Emocja && <p>Dominująca emocja: {Emocja}</p>}
+      {Playlists && Playlists.length > 0 && (
+      <div>
+        {Playlists.map((playlist, index) => (
+          <div key={index}>
+          <p>Nazwa Playlisty: {playlist.name}</p>
+            <p>Link: <a href={playlist.url} target="_blank" rel="noopener noreferrer">{playlist.url}</a></p>
+          </div>
+        ))}
+      </div>
+      )}
     </div>
   );
 }
