@@ -94,12 +94,14 @@ app.post('/run-python', (req, res) => {
 
             // Uzyskanie tokenu dostępu (Client Credentials Flow)
             const emotion = JSON.parse(result).emotion;
+            const age = JSON.parse(result).age;
+            const race = JSON.parse(result).race;
             spotifyApi.clientCredentialsGrant()
                 .then((data) => {
                     console.log('Uzyskano token dostępu:', data.body['access_token']);
                     spotifyApi.setAccessToken(data.body['access_token']);
-
-                    return spotifyApi.searchPlaylists(emotion);
+                    const agePhrase = age < 18 ? 'for teenagers' : `for ${age} year olds`;
+                    return spotifyApi.searchPlaylists(`${emotion} playlist ${agePhrase}`);
                 })
                 .then((data) => {
                     console.log('Znalezione playlisty:', data.body);
