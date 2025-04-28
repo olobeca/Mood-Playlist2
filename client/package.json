@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "proxy":  "https://localhost:5001",
+  "proxy": "https://localhost:5001",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -33,11 +33,15 @@
       "not dead",
       "not op_mini all"
     ],
-   
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.3.5"
   }
 }

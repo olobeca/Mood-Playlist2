@@ -72,7 +72,7 @@ function CameraCapture() {
 
 
   return (
-    <div>
+    <div className="">
       <Webcam
         audio={false}
         ref={webcamRef}
