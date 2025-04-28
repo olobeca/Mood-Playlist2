@@ -72,24 +72,29 @@ function CameraCapture() {
 
 
   return (
-    <div className="">
+    <div className="flex flex-col items-center justify-center p-4 space-y-6">
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
+        className="rounded-lg shadow-md w-full max-w-md"
       />
-      <button onClick={capture}>Zrób zdjęcie i wyślij</button>
-      <p>Odpowiedź z serwera: </p>
-      {Emocja && <p>Dominująca emocja: {Emocja}</p>}
-      {Age && <p>Wiek: {Age}</p>}
-      {Gender && <p>Pleć: {Gender}</p>}
-      {Race && <p>Rasa: {Race}</p>}
+      <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={capture}>Zrób zdjęcie i wyślij</button>
+      <p className="text-xl font-semibold mt-4">Odpowiedź z serwera:</p>
+
+      {Emocja && <p className="text-gray-700">Dominująca emocja: <span className="font-bold">{Emocja}</span></p>}
+      {Age && <p className="text-gray-700">Wiek: <span className="font-bold">{Age}</span></p>}
+      {Gender && <p className="text-gray-700">Płeć: <span className="font-bold">{Gender}</span></p>}
+      {Race && <p className="text-gray-700">Rasa: <span className="font-bold">{Race}</span></p>}
       {Playlists && Playlists.length > 0 && (
-      <div>
+      
+      <div className="mt-6 grid gap-4">
         {Playlists.map((playlist, index) => (
-          <div key={index}>
-          <p>Nazwa Playlisty: {playlist.name}</p>
-            <p>Link: <a href={playlist.url} target="_blank" rel="noopener noreferrer">{playlist.url}</a></p>
+          <div key={index} className="rounded p-4 border shadow-sm">
+          <p className="font-semibold">Nazwa Playlisty: {playlist.name}</p>
+          <p className="text-blue-600">
+            <a href={playlist.url} target="_blank" rel="noopener noreferrer">{playlist.url}</a>
+          </p>
           </div>
         ))}
       </div>
