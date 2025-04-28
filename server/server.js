@@ -59,11 +59,11 @@ app.post('/analyze', (req, res) => {
     res.json({ message: 'Obrazek odebrany!' });
 }); 
 
-app.post('/run-python', (req, res) => {
 
+app.post('/run-python', (req, res) => {
     let { image } = req.body;
 
-    //splitowanie obrazka zeby pasowal 
+    // Splitowanie obrazka, żeby pasował
     if (image.startsWith('data:image')) {
         image = image.split(',')[1];
     }
@@ -91,32 +91,36 @@ app.post('/run-python', (req, res) => {
             res.status(500).json({ error: 'Wystąpił błąd podczas uruchamiania skryptu.' });
         } else {
             console.log(`Wynik skryptu: ${result}`);
-            res.json({ output: result.trim() });
+
+            // Uzyskanie tokenu dostępu (Client Credentials Flow)
+            const emotion = JSON.parse(result).emotion;
+            spotifyApi.clientCredentialsGrant()
+                .then((data) => {
+                    console.log('Uzyskano token dostępu:', data.body['access_token']);
+                    spotifyApi.setAccessToken(data.body['access_token']);
+
+                    return spotifyApi.searchPlaylists(emotion);
+                })
+                .then((data) => {
+                    console.log('Znalezione playlisty:', data.body);
+                    const playlists = data.body.playlists.items
+                        .filter((playlist) => playlist !== null) 
+                        .map((playlist) => ({
+                            name: playlist.name,
+                            url: playlist.external_urls.spotify,
+                            tracks: playlist.tracks.total,
+                        }));
+
+                    // Wysyłamy wynik skryptu Pythona i playlisty jako odpowiedź
+                    res.json({
+                        pythonOutput: result.trim(),
+                        playlists: playlists || [], //pusta jesli puste
+                    });
+                })
+                .catch((error) => {
+                    console.error('Błąd podczas wyszukiwania playlist:', error);
+                    res.status(500).json({ error: 'Wystąpił błąd podczas wyszukiwania playlist.' });
+                });
         }
     });
-})
-
-// Uzyskanie tokenu dostępu (Client Credentials Flow)
-spotifyApi.clientCredentialsGrant()
-  .then((data) => {
-    console.log('Uzyskano token dostępu:', data.body['access_token']);
-    spotifyApi.setAccessToken(data.body['access_token']);
-
-    return spotifyApi.searchPlaylists('happy');
-  })
-  .then((data) => {
-    console.log('Znalezione playlisty:', data.body);
-    const playlists = data.body.playlists.items;
-    playlists.forEach((playlist) => {
-        if (playlist) {
-            console.log(`Nazwa playlisty: ${playlist.name}`);
-            console.log(`Link do playlisty: ${playlist.external_urls.spotify}`);
-            console.log(`Liczba utworów: ${playlist.tracks.total}`);
-            console.log('--------------------------');
-        }
-    });
-  })
-  .catch((error) => {
-    console.error('Błąd podczas wyszukiwania playlist:', error);
-  });
-
+});     

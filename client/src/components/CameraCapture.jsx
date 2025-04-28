@@ -38,9 +38,17 @@ function CameraCapture() {
         .then((data) => {
           console.log('Odpowiedź z serwera:', data);
           setOdpowiedz(data); 
-          if (data.output) {
-            const emotion = JSON.parse(data.output).emotion; 
+          if (data.pythonOutput) {
+            try {
+            const emotion = JSON.parse(data.pythonOutput).emotion; 
             setEmocja(emotion); 
+            } catch (error) {
+              console.error('Błąd podczas parsowania odpowiedzi:', error);
+            }
+          } 
+          if(data.playlists)
+          {
+            console.log('Playlisty:', data.playlists);
           }
         })
         .catch((error) => {
@@ -61,9 +69,7 @@ function CameraCapture() {
       />
       <button onClick={capture}>Zrób zdjęcie i wyślij</button>
       <p>Odpowiedź z serwera: </p>
-      {Odpowiedz && (
-        <p>Dominująca emocja: {Odpowiedz && JSON.parse(Odpowiedz.output).emotion}</p>
-      )}
+      {Emocja && <p>Dominująca emocja: {Emocja}</p>}
     </div>
   );
 }
