@@ -79,7 +79,7 @@ function CameraCapture() {
         screenshotFormat="image/jpeg"
         className="rounded-lg shadow-md w-full max-w-md"
       />
-      <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={capture}>Zrób zdjęcie i wyślij</button>
+      <button className="btn" onClick={capture}>Zrób zdjęcie i wyślij</button>
       <p className="text-xl font-semibold mt-4">Odpowiedź z serwera:</p>
 
       {Emocja && <p className="text-gray-700">Dominująca emocja: <span className="font-bold">{Emocja}</span></p>}
@@ -88,7 +88,7 @@ function CameraCapture() {
       {Race && <p className="text-gray-700">Rasa: <span className="font-bold">{Race}</span></p>}
       {Playlists && Playlists.length > 0 && (
       
-      <div className="mt-6 grid gap-4">
+      <div className="mt-6 grid gap-4 shadow-md grid-cols-2">
         {Playlists.map((playlist, index) => (
           <div key={index} className="rounded p-4 border shadow-sm">
           <p className="font-semibold">Nazwa Playlisty: {playlist.name}</p>
@@ -100,6 +100,7 @@ function CameraCapture() {
       </div>
       )}
     </div>
+
   );
 }
 
